@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create a EC2
+Parameters:
+  StanderdIPFormat:
+      Description : The IP address range that can be used to SSH to the EC2 instances
+      Type: String
+      MinLength: '9'
+      MaxLength: '18'
+      Default: 0.0.0.0/0
+      AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+      ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x
+
+  InstanceTypeParameter:
+    Type: String
+    Default: t2.medium
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.nano
+    Description: Enter t2.micro, t2.small, t2.medium, or t2.nano. Default is t3.micro.
+
+
+  Id:
+    Type: AWS::EC2::Image::Id
+    Default: ami-02f3416038bdb17fb
+    Description: Enter any AMI as Parameters
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType:
+        Ref: InstanceTypeParameter
+      ImageId: !Ref 'Id'
+      SecurityGroupIds:
+        - !Ref SampleSecurityGroup
+      Tags :
+        - Key: Name
+          Value: warrior-cloudformation
+
+
+  SampleSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Sample security group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref StanderdIPFormat
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  PublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, PublicIp]
+
+  AvailabilityZone:
+    Description: AvailabilityZone of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, AvailabilityZone]
+
+  PublicAddress:
+    Description: PublicDnsName of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, PublicDnsName]
