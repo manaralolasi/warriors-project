@@ -5,14 +5,14 @@ pipeline {
 	environment {
 		AWS_ACCESS_KEY_ID     = credentials('Access_key_ID')
   		AWS_SECRET_ACCESS_KEY = credentials('Secret_access_key')
-		ARTIFACT_NAME = 'hackathon.json'
-		AWS_S3_BUCKET = 'recycle-hackathon-2022'
-		AWS_EB_APP_NAME = 'goldenWaste'
-        AWS_EB_ENVIRONMENT_NAME = 'Goldenwaste-env'
+		AWS_S3_BUCKET = 'book22'
+		AWS_EB_APP_NAME = 'mmmmmmm'
+        AWS_EB_ENVIRONMENT_NAME = 'Mmmmmmm-env'
         AWS_EB_APP_VERSION = "${BUILD_ID}"
 	}
 
-	stages {       stage('Build'){
+	stages {      
+	stage('Build'){
             steps {
                 sh "mvn clean"
 
@@ -34,10 +34,10 @@ pipeline {
 
         stage('sonar scan'){
             steps {
-              sh "mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=class-chandra-d2a1-repeat \
-  -Dsonar.host.url=http://54.226.50.200 \
-  -Dsonar.login=sqp_d7baf278c0ef8e56894f4a426fb2e124470d954a"
+              sh "mvn clean verify sonar:sonar \"
+   mvn sonar:sonar \
+  -Dsonar.host.url=http://3.21.40.19:9000 \
+  -Dsonar.login=59474a2dfe0b653533baad039f3a2dc2aa7f0136
             }
         }
 
