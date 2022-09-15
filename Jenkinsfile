@@ -21,21 +21,6 @@ pipeline {
             }
         }
 
-        stage('Package') {
-            steps {
-                
-                sh "mvn package"
-
-            }
-
-            post {
-                success {
-                    archiveArtifacts artifacts: '**/target/**.war', followSymlinks: false
-
-                   
-                }
-            }
-        }
         
          stage('Test') {
             steps {
