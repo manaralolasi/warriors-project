@@ -31,17 +31,17 @@ pipeline {
                 }
             }
         }
-
-        stage('sonar scan'){
+        stage('Quality Scan'){
             steps {
-              sh "mvn clean verify sonar:sonar \"
-   mvn sonar:sonar \
-  -Dsonar.host.url=http://3.21.40.19:9000 \
-  -Dsonar.login=59474a2dfe0b653533baad039f3a2dc2aa7f0136
+                sh '''
+                mvn clean verify sonar:sonar \
+                    -Dsonar.projectKey=2022-book \
+                    -Dsonar.host.url=http://3.21.40.19:9000 \
+                    -Dsonar.login=59474a2dfe0b653533baad039f3a2dc2aa7f0136
+                '''
             }
         }
-
-
+       
         stage('Deploy') {
             steps {
                 sh 'aws configure set region us-east-2	'
