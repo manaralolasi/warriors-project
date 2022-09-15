@@ -6,6 +6,7 @@ pipeline {
 		AWS_ACCESS_KEY_ID     = credentials('Access_key_ID')
   		AWS_SECRET_ACCESS_KEY = credentials('Secret_access_key')
 		AWS_S3_BUCKET = 'book22'
+		 ARTIFACT_NAME = "booktracker-0.0.1-SNAPSHOT.war"
 		AWS_EB_APP_NAME = 'mmmmmmm'
         AWS_EB_ENVIRONMENT_NAME = 'Mmmmmmm-env'
         AWS_EB_APP_VERSION = "${BUILD_ID}"
@@ -20,14 +21,33 @@ pipeline {
             }
         }
 
-        stage('Test'){
+        stage('Package') {
             steps {
+                
+                sh "mvn package"
+
+            }
+
+            post {
+                success {
+                    archiveArtifacts artifacts: '**/target/**.war', followSymlinks: false
+
+                   
+                }
+            }
+        }
+        
+         stage('Test') {
+            steps {
+                
                 sh "mvn test"
+
             }
 
             post {
                 always {
-                    junit '**/target/surefire-reports/TEST-*.xml'
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+
                 }
             }
         }
